@@ -1,0 +1,6 @@
+[submodule "mock-ocr-llm-api"]
+	path = mock-ocr-llm-api
+	url = https://github.com/trindadetiago/mock-ocr-llm-api.git
+[submodule "mock-ocr-llm-front"]
+	path = mock-ocr-llm-front
+	url = https://github.com/trindadetiago/mock-ocr-llm-front.git
