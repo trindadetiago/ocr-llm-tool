@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build: 
+      context: ./mock-ocr-llm-api   
+      dockerfile: Dockerfile  
+    container_name: fastapi-app
+    ports:
+      - "8008:8008"
+    volumes:
+      - ./mock-ocr-llm-api:/app
+    environment:
+      - PROMETHEUS_METRICS=true
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+      - fastapi
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3030:3000"
+    depends_on:
+      - prometheus
+
+  frontend:
+    build: ./mock-ocr-llm-front
+    container_name: nextjs-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - fastapi
